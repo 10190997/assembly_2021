@@ -8,30 +8,29 @@ using namespace std;
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	short dim[] = { 1, -2, 3, -5, 4, 6, 7, 0, -10 };
-    short res;
+	short mas[9] = { 1, -2, 3, -5, 4, 6, 7, 0, -10 };
+    short res = 0;
     short n = 9;
     _asm {
-        xor ax, ax; 
-     PREPARE: 
-        mov cx, n; 
-        xor ebx, ebx;
-        lea ebx, dim;
-        jcxz EXITER;
-     COMPARE: 
-        mov dx, [ebx];
-        cmp dx, 0; 
-        jnge NEGAT; 
-     POSIT: 
-        add ax, dx; 
+        xor ax, ax
+        mov cx, n
+        lea esi, mas
+        jcxz EXITER
+     COMPARER: 
+        mov dx, [esi]
+        cmp dx, 0
+        jnge NEGAT
+        add ax, dx
      NEGAT: 
-        inc ebx;
-        inc ebx;
-loop COMPARE; 
+        inc esi
+        inc esi
+        dec cx;     взамен loop, который работает плохо в сочетании с lea
+        cmp cx, 0
+        jg COMPARER
      EXITER: 
         mov res, ax
     }
-    cout << res;
+    cout << "Сумма положительных элементов массива: " << res;
 
 	return 0;
 }
